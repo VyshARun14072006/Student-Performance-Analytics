@@ -10,7 +10,8 @@ st.title("🎓 Student Performance Prediction System")
 st.write("This ML-based system predicts a student's final exam score based on academic performance indicators.")
 
 # Load dataset
-data = pd.read_csv("dataset/student_data.csv")
+data = pd.read_csv("../dataset/student_data.csv")
+
 
 # Prepare features and target
 X = data[['study_hours', 'attendance', 'assignments_avg', 'midterm_score']]
