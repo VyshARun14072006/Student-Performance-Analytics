@@ -1,42 +1,23 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
 
-# Load dataset
-data = pd.read_csv("../dataset/student_data.csv")
+data = pd.read_csv("dataset/student_data.csv")
 
-print("Dataset Loaded Successfully!\n")
+print("🎓 Student Performance Prediction (Console Version)")
 print(data.head())
 
-# Features (Independent Variables)
-X = data[['study_hours', 'attendance', 'assignments_avg', 'midterm_score']]
+hours_studied = float(input("Hours Studied per Week: "))
+attendance = float(input("Attendance %: "))
+assignments_completed = float(input("Assignments Completed: "))
 
-# Target (Dependent Variable)
-y = data['final_score']
+X_train = data[['Hours_Studied', 'Attendance', 'Assignments_Completed']]
+y_train = data['Final_Score']
 
-# Split the dataset into training and testing
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-
-# Create Linear Regression model
 model = LinearRegression()
-
-# Train the model
 model.fit(X_train, y_train)
 
-# Make predictions
-y_pred = model.predict(X_test)
+X_new = np.array([[hours_studied, attendance, assignments_completed]])
+predicted_score = model.predict(X_new)[0]
 
-# Evaluate the model
-print("\nModel Evaluation:")
-print("Mean Squared Error:", mean_squared_error(y_test, y_pred))
-print("R2 Score:", r2_score(y_test, y_pred))
-
-# Predict for a new student
-new_student = np.array([[7, 85, 80, 78]])
-predicted_score = model.predict(new_student)
-
-print("\nPredicted Final Score for New Student:", predicted_score[0])
+print(f"\nPredicted Final Exam Score: {predicted_score:.2f}/100")

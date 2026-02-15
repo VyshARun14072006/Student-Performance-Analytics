@@ -3,36 +3,29 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-# Page configuration
-st.set_page_config(page_title="Student Performance Predictor", page_icon="🎓")
-
+# Title
 st.title("🎓 Student Performance Prediction System")
-st.write("This ML-based system predicts a student's final exam score based on academic performance indicators.")
 
 # Load dataset
 data = pd.read_csv("dataset/student_data.csv")
+st.subheader("Sample Dataset")
+st.write(data.head())
 
+# Input sliders for features
+st.subheader("Enter Student Details")
+hours_studied = st.slider("Hours Studied per Week", 0, 40, 10)
+attendance = st.slider("Attendance %", 0, 100, 80)
+assignments_completed = st.slider("Assignments Completed", 0, 20, 15)
 
-
-# Prepare features and target
-X = data[['study_hours', 'attendance', 'assignments_avg', 'midterm_score']]
-y = data['final_score']
-
-# Train model
-model = LinearRegression()
-model.fit(X, y)
-
-st.subheader("📊 Enter Student Details")
-
-study_hours = st.slider("Study Hours per Day", 0, 12, 5)
-attendance = st.slider("Attendance (%)", 0, 100, 75)
-assignments_avg = st.slider("Assignments Average (%)", 0, 100, 70)
-midterm_score = st.slider("Midterm Score (%)", 0, 100, 65)
-
+# Predict button
 if st.button("Predict Final Score"):
-    input_data = np.array([[study_hours, attendance, assignments_avg, midterm_score]])
-    prediction = model.predict(input_data)
-    st.success(f"🎯 Predicted Final Score: {round(prediction[0], 2)}")
+    X_train = data[['Hours_Studied', 'Attendance', 'Assignments_Completed']]
+    y_train = data['Final_Score']
+    
+    model = LinearRegression()
+    model.fit(X_train, y_train)
 
-st.markdown("---")
-st.write("Developed using Machine Learning (Linear Regression) with Streamlit Deployment")
+    X_new = np.array([[hours_studied, attendance, assignments_completed]])
+    predicted_score = model.predict(X_new)[0]
+
+    st.success(f"Predicted Final Exam Score: {predicted_score:.2f}/100")
